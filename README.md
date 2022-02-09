@@ -106,8 +106,32 @@ spec:
 Accessing to test.plexustv.net shows the index.html uploaded to the S3 bucket.
 For troubleshooting check the nginx ingress controller logs.
 
-kubectl logs ingress-nginx-controller-fd7bb8d66-tn6ps -n ingress-nginx
-
-**Add basic security**
 <pre><code>kubectl logs ingress-nginx-controller-fd7bb8d66-tn6ps -n ingress-nginx</pre></code>
 ![alt text](https://github.com/joanbm91/vmware-automation/blob/main/images/access%20logs.PNG)
+
+![alt text](https://github.com/joanbm91/vmware-automation/blob/main/images/result.PNG)
+
+**Add basic security**
+We can add basic security with kubernetes secrets.
+
+First of all encrypt a user password with htpasswd (requires apache2-utils)
+<pre><code>htpasswd -c auth admin</pre></code>
+
+Convert htpasswd into a secret, store it at the same namespace where the ingress its configured.
+<pre><code>kubectl create secret generic basic-auth --from-file=auth -n juan-borras2</pre></code>
+
+Check the stored secret
+<pre><code>kubectl get secret basic-auth -o yaml</pre></code>
+![alt text](https://github.com/joanbm91/vmware-automation/blob/main/images/auth.PNG)
+
+Modify the ingress resource adding the following lines:
+<pre><code> 
+nginx.ingress.kubernetes.io/auth-type: basic
+# name of the secret that contains the user
+nginx.ingress.kubernetes.io/auth-secret: basic-auth
+nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+</pre></code> 
+
+Test the access, a login prompt should appear asking credentials.
+![alt text](https://github.com/joanbm91/vmware-automation/blob/main/images/login.PNG)
+

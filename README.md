@@ -43,4 +43,69 @@ Validate the controller is running:
 kubectl get pods --all-namespaces -l app.kubernetes.io/name=ingress-nginx
 </pre></code>
 
+A new load balancer should be created on AWS. We should point our domain to the dns.
+I'm using the domain plexustv.net and I added a CNAME entry.
+<p>
+test.plexustv.net       CNAME         a99479daaa3114ea6b774ac0e1f12bf5-2079315275.eu-west-1.elb.amazonaws.com 
+</p>
 
+**Create a S3 bucket where the files will be stored**
+Create the bucket, I'm working on region eu-west-1 and I called the bucket: juanborrask8sproxy
+Enable website hosting.
+Add a index.html example file.
+Copy the S3 bucket url, http://juanborrask8sproxy.s3-website-eu-west-1.amazonaws.com
+
+
+**Create a kubernetess service**
+
+<pre><code>
+kind: Service
+apiVersion: v1
+metadata:
+  name: s3-bucket
+  namespace: juan-borras2
+spec:
+  type: ExternalName
+  externalName: juanborrask8sproxy.s3-website-eu-west-1.amazonaws.com
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+
+</pre></code>
+
+**Create a ingress resource**
+
+<pre><code>
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/upstream-vhost: juanborrask8sproxy.s3-website-eu-west-1.amazonaws.com
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+  name: ingres-s3-bucket
+  namespace: juan-borras2
+spec:
+  rules:
+  - host: test.plexustv.net
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: s3-bucket
+              port:
+                number: 80
+</pre></code>        
+
+**Check the access**
+
+Accessing to test.plexustv.net shows the index.html uploaded to the S3 bucket.
+For troubleshooting check the nginx ingress controller logs.
+
+kubectl logs ingress-nginx-controller-fd7bb8d66-tn6ps -n ingress-nginx
+
+**Add basic security**

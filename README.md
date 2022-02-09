@@ -42,6 +42,7 @@ job.batch/ingress-nginx-admission-patch created
 Validate the controller is running:
 kubectl get pods --all-namespaces -l app.kubernetes.io/name=ingress-nginx
 </pre></code>
+![alt text](https://github.com/joanbm91/vmware-automation/blob/main/images/ingress-nginx%20controller.PNG)
 
 A new load balancer should be created on AWS. We should point our domain to the dns.
 I'm using the domain plexustv.net and I added a CNAME entry.
@@ -57,6 +58,8 @@ Copy the S3 bucket url, http://juanborrask8sproxy.s3-website-eu-west-1.amazonaws
 
 
 **Create a kubernetess service**
+
+<pre><code>kubectl -f apply s3-ingress-service.yaml</pre></code>
 
 <pre><code>
 kind: Service
@@ -75,7 +78,12 @@ spec:
 
 </pre></code>
 
+Describe the service
+![alt text](https://github.com/joanbm91/vmware-automation/blob/main/images/describe%20service.PNG)
+
 **Create a ingress resource**
+
+<pre><code>kubectl -f apply s3-ingress-rule.yaml</pre></code>
 
 <pre><code>
 apiVersion: networking.k8s.io/v1
@@ -100,6 +108,9 @@ spec:
               port:
                 number: 80
 </pre></code>        
+
+List ingres configuration:
+![alt text](https://github.com/joanbm91/vmware-automation/blob/main/images/describe%20ingres.PNG)
 
 **Check the access**
 
@@ -133,5 +144,8 @@ nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
 </pre></code> 
 
 Test the access, a login prompt should appear asking credentials.
+
 ![alt text](https://github.com/joanbm91/vmware-automation/blob/main/images/login.PNG)
 
+
+**Remember destroy the kops cluster :)**

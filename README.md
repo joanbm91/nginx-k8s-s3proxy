@@ -5,7 +5,8 @@
  We can use kops.
  Kops, is an open source project used to set up Kubernetes clusters easily and swiftly. It's considered the “kubectl” 
  way of creating clusters. Kops allows deployment of highly available Kubernetes clusters on AWS and Google (GCP) clouds.
- I followed this tutorial and installed a 2 nodes cluster [link](https://conpilar.es/como-crear-un-cluster-de-kubernetes-con-kops/)
+ I installed a cluster composed by two nodes in eu-west-1 and running in one availibity zone.
+ [link](https://conpilar.es/como-crear-un-cluster-de-kubernetes-con-kops/)
  
 **Install ingress on the cluster**
 
@@ -79,6 +80,7 @@ spec:
 </pre></code>
 
 Describe the service
+
 ![alt text](https://github.com/joanbm91/vmware-automation/blob/main/images/describe%20service.PNG)
 
 **Create a ingress resource**
@@ -149,3 +151,4 @@ Test the access, a login prompt should appear asking credentials.
 
 
 **Remember destroy the kops cluster :)**
+<pre><code> kops delete cluster clustername --yes</pre></code> 

@@ -8,6 +8,13 @@
  I installed a cluster composed by two nodes in eu-west-1 and running in one availibity zone.
  [link](https://conpilar.es/como-crear-un-cluster-de-kubernetes-con-kops/)
  
+ New vpc created automatically
+ [link](https://github.com/joanbm91/vmware-automation/blob/main/images/vpc.PNG)
+ 
+ EC2 instances running
+ [link](https://github.com/joanbm91/vmware-automation/blob/main/images/nodes.PNG)
+
+ 
 **Install ingress on the cluster**
 
 Ingress is a Kubernetes resource type, that can be applied just like other resources. Its purpose is to define routing cluster-external requests to cluster-internal services. 
@@ -46,6 +53,9 @@ kubectl get pods --all-namespaces -l app.kubernetes.io/name=ingress-nginx
 ![alt text](https://github.com/joanbm91/vmware-automation/blob/main/images/ingress-nginx%20controller.PNG)
 
 A new load balancer should be created on AWS. We should point our domain to the dns.
+
+![alt text](https://github.com/joanbm91/vmware-automation/blob/main/images/load%20balancer%20ngin.PNG)
+
 I'm using the domain plexustv.net and I added a CNAME entry.
 <p>
 test.plexustv.net       CNAME         a99479daaa3114ea6b774ac0e1f12bf5-2079315275.eu-west-1.elb.amazonaws.com 

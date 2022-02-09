@@ -109,3 +109,5 @@ For troubleshooting check the nginx ingress controller logs.
 kubectl logs ingress-nginx-controller-fd7bb8d66-tn6ps -n ingress-nginx
 
 **Add basic security**
+<pre><code>kubectl logs ingress-nginx-controller-fd7bb8d66-tn6ps -n ingress-nginx</pre></code>
+![alt text](https://github.com/joanbm91/vmware-automation/blob/main/images/access%20logs.PNG)
